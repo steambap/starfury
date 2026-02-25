@@ -8,7 +8,7 @@ import "tile_type.dart";
 import "game_settings.dart";
 import "planet.dart";
 import "player.dart";
-import "ship.dart";
+import "unit.dart";
 import "name.dart" show planetNames;
 
 const plasticRatio = 1.32471795724474602596;
@@ -66,7 +66,12 @@ class GameCreator {
         game.g.humanPlayerIdx = i;
       }
 
-      final ship = Ship(i, hex);
+      final ship = Unit(
+        uid: game.g.nextUID(),
+        playerNumber: i,
+        kind: 0,
+        hex: hex,
+      );
       game.mapGrid.addShip(ship);
     }
 

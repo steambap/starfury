@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:watch_it/watch_it.dart';
 
 import 'main_menu.dart';
@@ -34,7 +34,7 @@ class Topbar extends StatelessWidget with WatchItMixin {
             },
             label: const Text('Back', style: AppTheme.label16),
             icon: const Icon(
-              Symbols.arrow_back_ios_new_rounded,
+              CupertinoIcons.left_chevron,
               color: AppTheme.iconPale,
             ),
           ),
@@ -45,7 +45,7 @@ class Topbar extends StatelessWidget with WatchItMixin {
                 const WidgetSpan(
                   alignment: .middle,
                   child: Icon(
-                    Symbols.deployed_code_rounded,
+                    CupertinoIcons.bolt_circle,
                     size: 14,
                     color: AppTheme.iconBlue,
                   ),

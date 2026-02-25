@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:starflame/cell.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -36,7 +35,7 @@ class HudBottomRight extends StatelessWidget with WatchItMixin {
               child: _cellPanel(cell),
             ),
             const SizedBox(height: 8),
-            ElevatedButton.icon(
+            ElevatedButton(
               onPressed: () {
                 if (game.watchMode) {
                   return;
@@ -44,8 +43,7 @@ class HudBottomRight extends StatelessWidget with WatchItMixin {
                 game.cycle.endTurn();
               },
               style: AppTheme.primaryButton,
-              icon: const Icon(Symbols.hourglass_bottom_rounded),
-              label: const Text('Next Turn'),
+              child: const Text('Next Turn'),
             ),
           ],
         ),

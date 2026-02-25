@@ -6,7 +6,7 @@ import 'package:flame/effects.dart';
 import 'scifi_game.dart';
 import 'hex.dart';
 import 'planet.dart';
-import 'ship.dart';
+import 'unit.dart';
 import "styles.dart";
 import 'tile_type.dart';
 
@@ -17,7 +17,7 @@ class Cell extends PositionComponent with HasGameReference<ScifiGame> {
   late final PolygonComponent _fog;
   TileType tileType = TileType.empty;
   SpriteComponent? tileSprite;
-  Ship? ship;
+  Unit? unit;
 
   Cell(this.hex) : super(anchor: Anchor.center) {
     position = hex.toPixel();
@@ -133,7 +133,7 @@ class Cell extends PositionComponent with HasGameReference<ScifiGame> {
   }
 
   bool hasEnemyShip(int playerNumber) {
-    return ship != null && ship!.playerIdx != playerNumber;
+    return unit != null && unit!.playerNumber != playerNumber;
   }
 
   bool isBlocked(int playerNumber) {

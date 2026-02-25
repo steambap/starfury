@@ -10,6 +10,7 @@ import 'scifi_game.dart';
 import 'cell.dart';
 import "hex.dart";
 import 'ship.dart';
+import 'unit.dart';
 import 'select_control.dart';
 import 'styles.dart';
 import 'game_settings.dart';
@@ -19,6 +20,15 @@ class _CellItem {
   final int priority;
 
   _CellItem(this.cell, this.priority);
+}
+
+class AStarInfo {
+  final List<Cell> path;
+  final int cost;
+
+  AStarInfo(this.path, this.cost);
+
+  static AStarInfo empty() => AStarInfo([], 0);
 }
 
 class MapGrid extends Component
@@ -34,7 +44,7 @@ class MapGrid extends Component
     (0, 1),
   ];
 
-  final List<Ship> ships = [];
+  final Map<int, Ship> ships = {};
   final fogLayer = PositionComponent(priority: 5);
   final labelLayer = PositionComponent(priority: 4);
   final shipLayer = PositionComponent(priority: 3);
@@ -82,10 +92,11 @@ class MapGrid extends Component
     }
   }
 
-  void addShip(Ship ship) {
-    final cell = game.g.cells[ship.hex.x][ship.hex.y];
-    cell.ship = ship;
-    ships.add(ship);
+  void addShip(Unit unit) {
+    final cell = game.g.cells[unit.hex.x][unit.hex.y];
+    cell.unit = unit;
+    final ship = Ship(unit.playerNumber, unit.hex);
+    ships[unit.uid] = ship;
     shipLayer.add(ship);
   }
 
@@ -186,7 +197,7 @@ class MapGrid extends Component
     return neighbours;
   }
 
-  Map<Cell, List<Cell>> findAllPath(
+  Map<Cell, AStarInfo> findAllPath(
     Cell originalNode,
     int playerNumber,
     int movementPoint,
@@ -224,12 +235,12 @@ class MapGrid extends Component
       }
     }
 
-    final Map<Cell, List<Cell>> paths = {};
+    final Map<Cell, AStarInfo> paths = {};
     for (final destination in cameFrom.keys) {
       final List<Cell> path = [];
       Cell current = destination;
       // Cell is occupied by other ship
-      if (current.ship != null) {
+      if (current.unit != null) {
         continue;
       }
       while (current != originalNode) {
@@ -237,23 +248,14 @@ class MapGrid extends Component
         current = cameFrom[current]!;
       }
 
-      paths[destination] = path;
+      paths[destination] = AStarInfo(path, costSoFar[destination]!);
     }
 
     return paths;
   }
 
-  void _moveShipHex(Ship ship, Cell cell) {
-    final prevCell = game.g.cells[ship.hex.x][ship.hex.y];
-    prevCell.ship = null;
-
-    ship.hex = cell.hex;
-    cell.ship = ship;
-  }
-
-  void moveShip(Ship ship, Cell cell) {
-    _moveShipHex(ship, cell);
-
-    ship.position = cell.position;
+  void moveShip(Unit unit, AStarInfo path) {
+    final ship = ships[unit.uid]!;
+    ship.prepMove(path);
   }
 }

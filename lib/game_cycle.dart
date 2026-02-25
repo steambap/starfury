@@ -44,6 +44,7 @@ class GameCycle extends Component with HasGameReference<ScifiGame> {
     }
 
     runProduction(game.g.moveOrderTurn);
+    resetUnitMove();
     if (game.g.players[game.g.moveOrderTurn].isAI) {
       endTurnCalc();
     } else {
@@ -72,5 +73,14 @@ class GameCycle extends Component with HasGameReference<ScifiGame> {
     final player = game.g.players[playerNumber];
 
     player.resources += playerIncome(playerNumber);
+  }
+
+  void resetUnitMove() {
+    final cells = game.g.cells;
+    for (final cellCols in cells) {
+      for (final cell in cellCols) {
+          cell.unit?.resetMove();
+      }
+    }
   }
 }

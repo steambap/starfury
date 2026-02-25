@@ -9,6 +9,13 @@ class State {
   int humanPlayerIdx = 0;
   int turn = 0;
   int moveOrderTurn = 0;
+  int _uid = 0;
+
+  int get uid => _uid;
+
+  int nextUID() {
+    return _uid++;
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -18,6 +25,7 @@ class State {
       'humanPlayerIdx': humanPlayerIdx,
       'turn': turn,
       'moveOrderTurn': moveOrderTurn,
+      'uid': _uid,
     };
   }
 }

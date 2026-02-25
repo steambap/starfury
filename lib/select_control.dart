@@ -19,7 +19,7 @@ class SelectControlWaitForInput extends SelectControlComponent {
 
 class SelectControlCell extends SelectControlComponent {
   final Cell selected;
-  late final Map<Cell, List<Cell>> cachedPaths;
+  late final Map<Cell, AStarInfo> cachedPaths;
 
   SelectControlCell(this.selected);
 
@@ -45,27 +45,26 @@ class SelectControlCell extends SelectControlComponent {
   @override
   void onCellClick(Cell cell) {
     if (cachedPaths.containsKey(cell)) {
-      game.mapGrid.moveShip(selected.ship!, cell);
-      game.mapGrid.selectControl = SelectControlWaitForInput();
+      game.mapGrid.moveShip(selected.unit!, cachedPaths[cell]!);
     } else {
       game.mapGrid.selectControl = SelectControlCell(cell);
     }
   }
 
   void _calcShipPaths() {
-    if (selected.ship == null) {
+    if (selected.unit == null) {
       cachedPaths = const {};
       return;
     }
 
-    final ship = selected.ship!;
-    final playerNumber = ship.playerIdx;
+    final ship = selected.unit!;
+    final playerNumber = ship.playerNumber;
     if (game.g.humanPlayerIdx != playerNumber) {
       cachedPaths = const {};
       return;
     }
 
-    cachedPaths = game.mapGrid.findAllPath(selected, playerNumber, 40);
+    cachedPaths = game.mapGrid.findAllPath(selected, playerNumber, ship.moveLeft);
 
     for (final cell in cachedPaths.keys) {
       cell.markAsHighlight();
